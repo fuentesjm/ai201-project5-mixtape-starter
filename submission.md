@@ -1,5 +1,8 @@
 # Codebase Map
 
+## AI usage
+I used AI primarily to explain unfamiliar code paths after I had already identified the relevant modules, rather than to guess the root cause from scratch. For example, I asked for help understanding the streak boundary logic and the difference between weekday() and isoweekday(), which confirmed the direction of the investigation before I verified it directly in the code and tests.
+
 ## Overview
 Mixtape is a Flask + SQLAlchemy app for sharing songs, building collaborative playlists, tracking listening activity, and sending notifications between friends. The app is organized around a small Flask app factory in app.py, SQLAlchemy models in models.py, route blueprints in routes/, and business logic in services/.
 
