@@ -1,4 +1,4 @@
-# Codebase Map
+# Submission
 
 ## AI usage
 I used AI as a navigation and explanation aid rather than as a substitute for reading the code. After I had already located the relevant route and service files, I asked it to summarize what each module did, trace a feature end-to-end from route to service, and explain suspicious functions and edge cases. That was especially helpful for understanding the streak boundary logic and the difference between weekday() and isoweekday(), because it helped me frame the investigation quickly. I still verified every conclusion directly in the source code and by reproducing the behavior with the existing tests and targeted inputs, and in a couple of cases I found that the AI’s explanation was directionally useful but incomplete, so I used it to guide the search and then confirmed the diagnosis myself.
