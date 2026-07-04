@@ -1,7 +1,7 @@
 # Codebase Map
 
 ## AI usage
-I used AI primarily to explain unfamiliar code paths after I had already identified the relevant modules, rather than to guess the root cause from scratch. For example, I asked for help understanding the streak boundary logic and the difference between weekday() and isoweekday(), which confirmed the direction of the investigation before I verified it directly in the code and tests.
+I used AI as a navigation and explanation aid rather than as a substitute for reading the code. After I had already located the relevant route and service files, I asked it to summarize what each module did, trace a feature end-to-end from route to service, and explain suspicious functions and edge cases. That was especially helpful for understanding the streak boundary logic and the difference between weekday() and isoweekday(), because it helped me frame the investigation quickly. I still verified every conclusion directly in the source code and by reproducing the behavior with the existing tests and targeted inputs, and in a couple of cases I found that the AI’s explanation was directionally useful but incomplete, so I used it to guide the search and then confirmed the diagnosis myself.
 
 ## Overview
 Mixtape is a Flask + SQLAlchemy app for sharing songs, building collaborative playlists, tracking listening activity, and sending notifications between friends. The app is organized around a small Flask app factory in app.py, SQLAlchemy models in models.py, route blueprints in routes/, and business logic in services/.
@@ -119,7 +119,7 @@ I verified the current behavior by running pytest -q from the project root. The 
 4. The root cause
    - The database query joined the song_tags association table without deduplicating rows. When a song had multiple tag rows, it was returned multiple times in the result set.
 5. Your fix and side-effect check
-   - I removed the unnecessary join and used distinct(Song.id) so each song is returned once even when it has many tags. I verified the search tests and confirmed the duplicate-song cases now pass without affecting other search results.
+   - I removed the unnecessary join and grouped the query by Song.id so each song is returned once even when it has many tags. I verified the search tests and confirmed the duplicate-song cases now pass without affecting other search results.
 
 ### Issue #5 — last song missing from playlist results
 1. Issue number and title
