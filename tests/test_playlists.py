@@ -84,3 +84,64 @@ def test_empty_playlist_returns_empty_list(app):
 
         songs = get_playlist_songs(playlist.id)
         assert songs == []
+
+
+def test_single_song_playlist_returns_that_song(app):
+    """A playlist with one song should return exactly that song."""
+    with app.app_context():
+        user = User(username="singleton", email="singleton@example.com")
+        db.session.add(user)
+        db.session.flush()
+
+        song = Song(title="Only Track", artist="Artist", shared_by=user.id)
+        db.session.add(song)
+        db.session.flush()
+
+        playlist = Playlist(name="One Song Playlist", created_by=user.id)
+        db.session.add(playlist)
+        db.session.flush()
+
+        db.session.execute(
+            playlist_entries.insert().values(
+                playlist_id=playlist.id,
+                song_id=song.id,
+                position=1,
+                added_by=user.id,
+            )
+        )
+        db.session.commit()
+
+        songs = get_playlist_songs(playlist.id)
+        assert [s["title"] for s in songs] == ["Only Track"]
+
+
+def test_large_playlist_returns_all_songs(app):
+    """A larger playlist should include every item, not drop the tail."""
+    with app.app_context():
+        user = User(username="bigdj", email="bigdj@example.com")
+        db.session.add(user)
+        db.session.flush()
+
+        songs = [Song(title=f"Track {i}", artist="Artist", shared_by=user.id) for i in range(1, 26)]
+        db.session.add_all(songs)
+        db.session.flush()
+
+        playlist = Playlist(name="Large Playlist", created_by=user.id)
+        db.session.add(playlist)
+        db.session.flush()
+
+        for i, song in enumerate(songs, start=1):
+            db.session.execute(
+                playlist_entries.insert().values(
+                    playlist_id=playlist.id,
+                    song_id=song.id,
+                    position=i,
+                    added_by=user.id,
+                )
+            )
+
+        db.session.commit()
+
+        songs = get_playlist_songs(playlist.id)
+        assert len(songs) == 25
+        assert songs[-1]["title"] == "Track 25"

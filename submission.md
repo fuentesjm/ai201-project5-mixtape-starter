@@ -95,7 +95,7 @@ The README identifies five issue areas that will guide the next milestone:
 - Missing last-song retrieval in services/playlist_service.py
 
 ## Reproduction steps and root cause analysis
-I verified the current behavior by running pytest -q from the project root. The run reported 3 failing tests and 10 passing tests, which gave me concrete repro paths for three of the issues.
+I verified the current behavior by running pytest -q from the project root. The current suite passes with 17 passing tests, and I added regression coverage for the recent-feed threshold and playlist boundary cases to make the fixes more robust.
 
 ### Issue #1 — Sunday streak reset
 1. Issue number and title
